@@ -3,6 +3,18 @@ name = "stdin-readlines"
 version = "0.1.0"
 authors = ["Jia Chao <jiachao2130@126.com>"]
 edition = "2018"
+license = "GPL-3.0"
+readme = "README.md"
+repository = "https://github.com/Jchao/stdin-readlines"
+keywords = ["stdin", "readlines", "EOF", "multilines"]
+include = ["src/**/*", "Cargo.toml", "README.md"]
+description = "Use in terminal to read stdin, it can read lines, with `EOF` to stop read."
+
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
