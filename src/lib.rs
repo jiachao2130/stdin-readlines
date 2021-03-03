@@ -1,9 +1,22 @@
 use std::io;
 
+/// std::io::stdin().read_line(&buf)
+pub fn stdin_read_line(input: &mut String) -> bool {
+    match io::stdin().read_line(input) {
+        Ok(_) => {},
+        Err(err) => {
+            println!("Error when read line from stdin: {}", err);
+            return false
+        },
+    }
+
+    true
+}
+
 /// Default use `EOF` as end of the reading stage.
-pub fn stdin_readlines(input: &mut String) {
+pub fn stdin_readlines(input: &mut String) -> bool {
     let eof = String::from("EOF");
-    stdin_readlines_end_with(input, &eof);
+    stdin_readlines_end_with(input, &eof)
 }
 
 /// CMDS
@@ -14,9 +27,10 @@ pub fn stdin_readlines(input: &mut String) {
 ///     C_P: print the current inputed lines, if more the than 10 lines,
 ///         every time print 10 lines, then you can input `n` to print the next,
 ///         use `q` to quit print mode.
-pub fn stdin_readlines_end_with(input: &mut String, eof: &String) {
+pub fn stdin_readlines_end_with(input: &mut String, eof: &String) -> bool {
     let mut lines: Vec<String> = Vec::new();
     let mut index = 0;
+    let mut failed_times = 0;
 
     println!("> `{}` to stop reading from stdin, and `C_H` show help", eof.trim_end());
     // start reading until get eof str.
@@ -88,12 +102,21 @@ pub fn stdin_readlines_end_with(input: &mut String, eof: &String) {
                     index += 1;
                 }
             },
-            Err(err) => println!("Error when read line from stdin: {}", err),
+            Err(err) => {
+                println!("Error when read line from stdin: {}", err);
+                failed_times += 1;
+                if failed_times > 3 {
+                    println!("Failed more than 3 times, stop and exit.");
+                    return false
+                }
+            },
         }
     }
     for line in &lines {
         input.push_str(line);
     }
+
+    true
 }
 
 fn show_help() {
